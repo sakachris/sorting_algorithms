@@ -22,6 +22,7 @@ void swap(int *first, int *second)
  * @array: array to be sorted
  * @start: first index of array of integers
  * @end: last index of array of integers
+ * @n: length of array
  *
  * Return: index of the pivot integer
  */
@@ -31,21 +32,27 @@ size_t partition(int *array, int start, int end, size_t n)
 	int pivot;
 	int idx, i;
 
-	(void)n;
 	pivot = array[end];
-	idx = start;
+	idx = start - 1;
 
 	for (i = start; i < end; i++)
 	{
 		if (array[i] <= pivot)
 		{
-			swap(&array[i], &array[idx]);
 			idx++;
+			if (idx != i)
+			{
+				swap(&array[idx], &array[i]);
+				print_array(array, n);
+			}
 		}
 	}
-	swap(&array[idx], &array[end]);
-	print_array(array, n);
-	return (idx);
+	if (pivot < array[idx + 1])
+	{
+		swap(&array[idx + 1], &array[end]);
+		print_array(array, n);
+	}
+	return (idx + 1);
 }
 
 /**
@@ -53,6 +60,7 @@ size_t partition(int *array, int start, int end, size_t n)
  * @array: array to sort
  * @start: first index of portion of array
  * @end: last index of portion of array
+ * @size: length of array
  *
  * Return: Nothing
  */
@@ -65,7 +73,6 @@ void quick_sort_rec(int *array, int start, int end, size_t size)
 	{
 		pvt_idx = partition(array, start, end, size);
 		quick_sort_rec(array, start, pvt_idx - 1, size);
-		/*print_array(array, size);*/
 		quick_sort_rec(array, pvt_idx + 1, end, size);
 	}
 }
@@ -82,6 +89,9 @@ void quick_sort_rec(int *array, int start, int end, size_t size)
 void quick_sort(int *array, size_t size)
 {
 	size_t start = 0, end = size - 1;
+
+	if (!array || size < 2)
+		return;
 
 	quick_sort_rec(array, start, end, size);
 }
