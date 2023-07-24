@@ -11,26 +11,27 @@
 
 void shell_sort(int *array, size_t size)
 {
-	size_t increment = 1, i;
-	int j, k;
+	size_t increment = 1, i, j;
+	int temp;
 
 	if (!array || size < 2)
 		return;
 
-	while (increment <= (size - 1) / 9)
+	while (increment < size)
 		increment = 3 * increment + 1;
+	increment = (increment - 1) / 3;
 
-	while (increment >= 1)
+	while (increment > 0)
 	{
 		for (i = increment; i < size; i++)
 		{
-			k = array[i];
-			for (j = i - increment; j >= 0 && k < array[j]; j = j - increment)
-				array[j + increment] = array[j];
+			temp = array[i];
+			for (j = i; j >= increment && array[j - increment] > temp; j -= increment)
+				array[j] = array[j - increment];
 
-			array[j + increment] = k;
+			array[j] = temp;
 		}
-		increment = increment / 3;
+		increment = (increment - 1) / 3;
 		print_array(array, size);
 
 	}
